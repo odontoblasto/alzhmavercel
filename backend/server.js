@@ -8,12 +8,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors())
 
-//DB configs
-//mongoose
- // .connect("")
-  //.catch((err) => console.log(err));
-
-
 const uri = process.env.ATLAS_URI;
 mongoose.connect(uri);
 const connection = mongoose.connection;
@@ -23,6 +17,23 @@ console.log("MongoDB database connection established successfully");
 const postSchema = mongoose.Schema({
   title: String,
   description: String,
+  length_description:Number,
+});
+
+const resumeSchema = mongoose.Schema({ 
+  attempts:Number,
+  score:Number,  
+});
+
+const Resume = mongoose.model("Resume",resumeSchema);
+
+app.post("/resume", (req,res)=>{
+  Resume.create({  
+    attempts:req.body.attempts,
+    score:req.body.score,  
+  })
+  .then((doc)=>console.log(doc))
+  .catch((err)=>(err))
 });
 
 const Post = mongoose.model("Post", postSchema);
@@ -35,21 +46,12 @@ app.post("/create", (req, res) => {
 
   Post.create({
     title: req.body.title,
-    description: req.body.description,
+    description: req.body.description,  
   })
   .then((doc)=>console.log(doc))
   .catch((err)=>(err))
- // console.log(req.body)
-  //const newPost = new Post({
-   // title: req.body.title,
-    //description: req.body.description,
   });
 
-  //newPost
-    //.save()
-    //.then((doc) => console.log(doc))
-    //.catch((err) => console.log(err));
-//});
 app.get("/posts", (req, res) => {
   Post.find()
     .then((items) => res.json(items))
@@ -68,7 +70,7 @@ app.put("/update/:id", (req, res) => {
     { _id: req.params.id },
     {
       title: req.body.title,
-      description: req.body.description,
+      description: req.body.description,     
     }
   )
     .then((doc) => console.log(doc))

@@ -2,17 +2,34 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Button, Form } from "react-bootstrap";
-import Modal from "react-bootstrap/Modal";
+import Modal from "react-bootstrap/Modal"
+import '../index.css';
+import Logo from '../images/mh logo.png'
 
 function Posts() {
+
   const navigate = useNavigate();
+
   const [posts, setPosts] = useState([]);
   const [updatedPost, setUpdatedPost] = useState({
     id: "",
     title: "",
     description: "",
   });
+
+  const timeElapsed = Date.now();
+  const today = new Date(timeElapsed);
+  const date = today.toLocaleDateString();
+
+  const [answer,setAnswer ] = useState("")
+  const [score,setScore] = useState(0)
+  const [attempts,setAttempts] = useState(0)
   const [show, setShow] = useState(false);
+  const [resume,setResume] = useState({
+    data:date,
+    attempts:"",
+    score:"",
+  });
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -25,7 +42,7 @@ function Posts() {
         setPosts(res.data);
       })
       .catch((err) => console.log(err));
-  }, []);
+  }, [setScore,setResume]);
 
   const deletePost = (id) => {
     console.log(id);
@@ -60,6 +77,33 @@ function Posts() {
     });
   };
 
+  function checkAnswer(){ 
+    setAttempts(attempts+1)
+    posts.map((post)=>{
+      console.log("post",posts);
+      console.log("answer",answer);
+      if(post.description==answer){
+        setScore(score+10)
+      }
+    })  
+  };
+
+  function terminateQuiz(){
+
+      setResume(attempts = attempts,score = score)
+      console.log("terminate resume",resume)
+      console.log("terminate attempts",attempts)
+      console.log("terminate score",score)  
+
+    axios
+    .post("/resume", resume)
+    .then((res) => console.log(res))
+    .catch((err) => console.log(err));  
+    //   navigate("posts");
+  };
+
+
+
   const saveUpdatedPost = () => {
     console.log(updatedPost);
 
@@ -73,29 +117,47 @@ function Posts() {
   };
 
   return (
-    <div style={{ width: "90%", margin: "auto auto", textAlign: "center" }}>
-      <h1>Posts page</h1>
+    <div style={{ width: "100%", margin: "auto auto", textAlign: "center" }}>    
+      <nav className="navbar navbar-expand-lg  navbar-dark bg-dark">
+        <div className="container-fluid">
+          <a className="navbar-brand" href="#">The Alzhma project 2.0</a>
+          <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span className="navbar-toggler-icon"></span>
+          </button>
+          <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div className="navbar-nav">
+                <a className="nav-link active" aria-current="page" href="./register">Registro</a>
+                <a className="nav-link active" href="./login">Login</a>
+                <a className="nav-link active" href="./profile">Perfil</a>
+                <a className="nav-link active" href="./create">Perguntas</a>
+                <a className="nav-link active" href="./posts">Quiz</a>
+                <a className="nav-link active" href="./">Sair</a>         
+            </div>
+          </div>
+        </div>
+      </nav>
+      <h1>Quiz</h1>
       <Button
         variant="outline-dark"
         style={{ width: "100%", marginBottom: "1rem" }}
         onClick={() => navigate(-1)}
       >
-        BACK
+        Voltar
       </Button>
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Update a post</Modal.Title>
+          <Modal.Title>Mudar Perguntas e Respostas</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form.Control
-            placeholder="title"
+            placeholder="Pergunta"
             name="title"
             value={updatedPost.title ? updatedPost.title : ""}
             style={{ marginBottom: "1rem" }}
             onChange={handleChange}
           />
           <Form.Control
-            placeholder="description"
+            placeholder="Resposta"
             name="description"
             onChange={handleChange}
             value={updatedPost.description ? updatedPost.description : ""}
@@ -106,12 +168,14 @@ function Posts() {
             Close
           </Button>
           <Button variant="primary" onClick={saveUpdatedPost}>
-            Save Changes
+            Salvar Mudanças
           </Button>
         </Modal.Footer>
       </Modal>
       {posts ? (
         <>
+         <h3> Hoje é : {date}</h3>
+
           {posts.map((post) => {
             return (
               <div
@@ -122,14 +186,27 @@ function Posts() {
                 }}
                 key={post._id}
               >
-                <h4>{post.title}</h4>
-                <p>{post.description}</p>
+                <p> Suas tentativas : {attempts}</p>
+                <p> Sua pontuação : {score}</p>
+                <h4> Pergunta : {post.title}</h4>                       
+           
+                <Form.Control
+                  placeholder="Sua Resposta"
+                  name="answer"                      
+                  value={answer}
+                  onChange={(e)=>setAnswer([e.target.value])}
+                />                
+                {/* <p>{post.description}</p> 
+                <p>{answer}</p>                        */}
+
+                {/* {post.description==answer?<p>OK!!!!</p>:<p>Errou</p>}    */}
+                <Button onClick={checkAnswer}>Verificar sua Resposta</Button>                  
+
                 <div
                   style={{
                     display: "flex",
                     flexDirection: "row",
                     justifyContent: "space-between",
-
                     padding: "1rem",
                   }}
                 >
@@ -140,14 +217,14 @@ function Posts() {
                     }
                     style={{ width: "100%", marginRight: "1rem" }}
                   >
-                    UPDATE
+                    Modificar essa Pergunta ?
                   </Button>
                   <Button
                     onClick={() => deletePost(post._id)}
                     variant="outline-danger"
                     style={{ width: "100%" }}
                   >
-                    DELETE
+                    Remover essa Pergunta?
                   </Button>
                 </div>
               </div>
@@ -157,6 +234,10 @@ function Posts() {
       ) : (
         ""
       )}
+      <Button
+       onClick={terminateQuiz}
+       variant="outline-danger"
+       style={{ width: "100%" }} >Finalizar Quiz</Button>
     </div>
   );
 }
