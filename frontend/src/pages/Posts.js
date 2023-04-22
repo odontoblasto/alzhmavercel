@@ -4,7 +4,7 @@ import axios from "axios";
 import { Button, Form } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal"
 import '../index.css';
-import Logo from '../images/mh logo.png'
+import { auth } from '../config/firebase'
 
 function Posts() {
 
@@ -15,6 +15,7 @@ function Posts() {
     id: "",
     title: "",
     description: "",
+
   });
 
   const timeElapsed = Date.now();
@@ -25,11 +26,11 @@ function Posts() {
   const [score,setScore] = useState(0)
   const [attempts,setAttempts] = useState(0)
   const [show, setShow] = useState(false);
-  const [resume,setResume] = useState({
-    data:date,
-    attempts:"",
-    score:"",
-  });
+  // const [resume,setResume] = useState({
+  //   date:date,
+  //   attempts:"0",
+  //   score:"0",
+  // });
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -42,7 +43,7 @@ function Posts() {
         setPosts(res.data);
       })
       .catch((err) => console.log(err));
-  }, [setScore,setResume]);
+  }, [setScore]);
 
   const deletePost = (id) => {
     console.log(id);
@@ -88,21 +89,26 @@ function Posts() {
     })  
   };
 
-  function terminateQuiz(){
+  function terminateQuiz(){  
 
-      setResume(attempts = attempts,score = score)
-      console.log("terminate resume",resume)
-      console.log("terminate attempts",attempts)
-      console.log("terminate score",score)  
+    navigate("/");
+    // console.log("terminate resume1",resume)
+    //   setResume(()=>{
+    //     return{
+    //       resume,date:date,attempts:attempts,score:score,
+    //     };
+    //   })
+    //   console.log("terminate resume2",resume)
+    //   console.log("terminate attempts",attempts)
+    //   console.log("terminate score",score) 
+    //   console.log("terminate data",date)  
 
-    axios
-    .post("/resume", resume)
-    .then((res) => console.log(res))
-    .catch((err) => console.log(err));  
-    //   navigate("posts");
+    // axios
+    // .post("/resume", resume)
+    // .then((res) => console.log(res))
+    // .catch((err) => console.log(err));  
+    // //   navigate("posts");
   };
-
-
 
   const saveUpdatedPost = () => {
     console.log(updatedPost);
@@ -117,32 +123,33 @@ function Posts() {
   };
 
   return (
-    <div style={{ width: "100%", margin: "auto auto", textAlign: "center" }}>    
+    <div style={{ width: "70%", margin: "auto auto", textAlign: "center" }}>    
       <nav className="navbar navbar-expand-lg  navbar-dark bg-dark">
         <div className="container-fluid">
-          <a className="navbar-brand" href="#">The Alzhma project 2.0</a>
+          <a className="navbar-brand" href="#">The Alzhma Project 2.0</a>
           <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>
           </button>
           <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div className="navbar-nav">
-                <a className="nav-link active" aria-current="page" href="./register">Registro</a>
+                {/* <a className="nav-link active" aria-current="page" href="./register">Registro</a>
                 <a className="nav-link active" href="./login">Login</a>
-                <a className="nav-link active" href="./profile">Perfil</a>
-                <a className="nav-link active" href="./create">Perguntas</a>
-                <a className="nav-link active" href="./posts">Quiz</a>
+                <a className="nav-link active" href="./profile">Perfil</a> */}
+                {/* <a className="nav-link active" href="./create">Perguntas</a>
+                <a className="nav-link active" href="./posts">Quiz</a> */}
                 <a className="nav-link active" href="./">Sair</a>         
             </div>
           </div>
         </div>
       </nav>
       <h1>Quiz</h1>
+      <h3>Olá , {auth?.currentUser?.email}</h3>
       <Button
         variant="outline-dark"
         style={{ width: "100%", marginBottom: "1rem" }}
-        onClick={() => navigate(-1)}
+        onClick={() => navigate("/create")}
       >
-        Voltar
+        Criar outras Perguntas ?      
       </Button>
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
@@ -165,19 +172,24 @@ function Posts() {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
-            Close
+            Voltar
           </Button>
           <Button variant="primary" onClick={saveUpdatedPost}>
             Salvar Mudanças
           </Button>
         </Modal.Footer>
       </Modal>
-      {posts ? (
+  
         <>
          <h3> Hoje é : {date}</h3>
 
+         {/* {console.log("puid",posts)} */}
+
           {posts.map((post) => {
-            return (
+            if(post.uid===auth?.currentUser?.uid){
+              console.log("sim");
+            //}            
+            return(
               <div
                 style={{
                   marginBottom: "1rem",
@@ -188,6 +200,8 @@ function Posts() {
               >
                 <p> Suas tentativas : {attempts}</p>
                 <p> Sua pontuação : {score}</p>
+                {/* <p>{post.uid}</p>
+                <p>{auth?.currentUser?.uid}</p> */}
                 <h4> Pergunta : {post.title}</h4>                       
            
                 <Form.Control
@@ -198,7 +212,6 @@ function Posts() {
                 />                
                 {/* <p>{post.description}</p> 
                 <p>{answer}</p>                        */}
-
                 {/* {post.description==answer?<p>OK!!!!</p>:<p>Errou</p>}    */}
                 <Button onClick={checkAnswer}>Verificar sua Resposta</Button>                  
 
@@ -227,13 +240,15 @@ function Posts() {
                     Remover essa Pergunta?
                   </Button>
                 </div>
-              </div>
-            );
-          })}
+              </div>)}
+              // else{
+              //   return(
+                  
+              //   )
+              // }        
+           })}
         </>
-      ) : (
-        ""
-      )}
+      
       <Button
        onClick={terminateQuiz}
        variant="outline-danger"
@@ -241,5 +256,4 @@ function Posts() {
     </div>
   );
 }
-
 export default Posts;

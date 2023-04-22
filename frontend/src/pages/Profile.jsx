@@ -1,9 +1,6 @@
 import '../index.css';
 
 export function Profile(){
-
-
-
     return(
         <>       
             <nav className="navbar navbar-expand-lg  navbar-dark bg-dark">

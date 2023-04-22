@@ -1,3 +1,5 @@
+
+// const { auth } = require('../frontend/src/config/firebase') 
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
@@ -14,27 +16,29 @@ const connection = mongoose.connection;
 connection.once('open', () => {
 console.log("MongoDB database connection established successfully");
 })
+
+// const uid = auth.currentUser.uid
 const postSchema = mongoose.Schema({
   title: String,
   description: String,
-  length_description:Number,
+  uid:String,
 });
 
-const resumeSchema = mongoose.Schema({ 
-  attempts:Number,
-  score:Number,  
-});
+// const resumeSchema = mongoose.Schema({ 
+//   attempts:Number,
+//   score:Number,  
+// });
 
-const Resume = mongoose.model("Resume",resumeSchema);
+// const Resume = mongoose.model("Resume",resumeSchema);
 
-app.post("/resume", (req,res)=>{
-  Resume.create({  
-    attempts:req.body.attempts,
-    score:req.body.score,  
-  })
-  .then((doc)=>console.log(doc))
-  .catch((err)=>(err))
-});
+// app.post("/resume", (req,res)=>{
+//   Resume.create({  
+//     attempts:req.body.attempts,
+//     score:req.body.score,  
+//   })
+//   .then((doc)=>console.log(doc))
+//   .catch((err)=>(err))
+// });
 
 const Post = mongoose.model("Post", postSchema);
 
@@ -46,7 +50,8 @@ app.post("/create", (req, res) => {
 
   Post.create({
     title: req.body.title,
-    description: req.body.description,  
+    description: req.body.description,
+    uid:req.body.uid,  
   })
   .then((doc)=>console.log(doc))
   .catch((err)=>(err))
