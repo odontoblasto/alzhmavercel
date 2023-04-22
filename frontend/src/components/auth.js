@@ -8,7 +8,6 @@ import {Button} from 'react-bootstrap'
 
 
 export  function Auth (){
-
  
     const navigate = useNavigate();  
     const [email,setEmail] = useState("");

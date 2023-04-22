@@ -2,7 +2,6 @@ import '../index.css';
 import {Auth} from "../components/auth"
 
 export function Login(){
-
     return(
         <>      
             <div  style={{ textAlign: "center", width: "100%", margin: "auto auto" }}>                          
@@ -25,10 +24,8 @@ export function Login(){
                     </div>
                 </nav>
                 <h1>Login</h1>
-                <h5><Auth/></h5>  
-             
-            </div>
- 
+                    <h2><Auth/></h2>               
+            </div> 
         </>
     )
 }
