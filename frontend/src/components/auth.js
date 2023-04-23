@@ -47,10 +47,11 @@ export  function Auth (){
             <div>
                 <MdEmail size={"3rem"}/>
                 <input placeholder="Email"
+                type='email'
                 onChange={(e)=>{setEmail(e.target.value)}}
                 />
                 <MdOutlinePassword size={"3rem"}/>
-                <input placeholder="Senha"
+                <input placeholder="Senha" type="password"
                 onChange={(e)=>{setPassword(e.target.value)}}
                 />
                 <Button onClick={signIn}>Entrar</Button> 
