@@ -7,8 +7,8 @@ import { auth } from "../config/firebase"
 
 function CreatePost() {
 
-    const [uid,setUid] = useState("")
-    const [email,setEmail] = useState("")
+    // const [uid,setUid] = useState("")
+    // const [email,setEmail] = useState("")
     
 
     const navigate = useNavigate();
@@ -30,7 +30,6 @@ function CreatePost() {
   
     const createPost = (e) => {
       e.preventDefault();
-      //  console.log("auth",auth.currentUser)  
       axios
         .post("/create", post)
         .then((res) => console.log(res))
@@ -42,24 +41,19 @@ function CreatePost() {
       <div style={{ textAlign: "center", width: "70%", margin: "auto auto" }}>     
         <nav className="navbar navbar-expand-lg  navbar-dark bg-dark">
           <div className="container-fluid">
-            <a className="navbar-brand" href="#">The Alzhma Project 2.0</a>
+            <p className="navbar-brand">The Alzhma Project 2.0</p>
             <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
               <span className="navbar-toggler-icon"></span>
             </button>
             <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
-              <div className="navbar-nav">
-              {/* <a className="nav-link active" aria-current="page" href="./register">Registro</a> */}
-                  {/* <a className="nav-link active" href="./login">Login</a> */}
-                  {/* <a className="nav-link active" href="./profile">Perfil</a> */}
-                  {/* <a className="nav-link active" href="./create">Perguntas</a>
-                  <a className="nav-link active" href="./posts">Quiz</a> */}
+              <div className="navbar-nav">   
                   <a className="nav-link active" href="./">Sair</a>          
               </div>
             </div>
           </div>
         </nav>
         <h2> Olá , {auth?.currentUser?.email}</h2>
-        {/* <h3>{auth?.currentUser?.uid}</h3> */}
+   
         <Form>
         <h3>Crie Seu Quiz - Perguntas e Respostas</h3>
           <Form.Group>
@@ -86,13 +80,6 @@ function CreatePost() {
             Ir para o Quiz
           </Button>
         </Form>
-        {/* <Button
-          onClick={() => navigate("/posts")}
-          variant="outline-success"
-          style={{ width: "100%" }}
-        >
-          Quiz
-        </Button> */}
       </div>
     );
   }

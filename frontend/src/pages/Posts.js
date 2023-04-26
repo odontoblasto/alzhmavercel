@@ -26,11 +26,7 @@ function Posts() {
   const [score,setScore] = useState(0)
   const [attempts,setAttempts] = useState(0)
   const [show, setShow] = useState(false);
-  // const [resume,setResume] = useState({
-  //   date:date,
-  //   attempts:"0",
-  //   score:"0",
-  // });
+
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -81,33 +77,15 @@ function Posts() {
   function checkAnswer(){ 
     setAttempts(attempts+1)
     posts.map((post)=>{
-      console.log("post",posts);
-      console.log("answer",answer);
-      if(post.description==answer){
+      if(post.description===answer){
         setScore(score+10)
       }
     })  
   };
 
-  function terminateQuiz(){  
+  function terminateQuiz(){ 
 
     navigate("/");
-    // console.log("terminate resume1",resume)
-    //   setResume(()=>{
-    //     return{
-    //       resume,date:date,attempts:attempts,score:score,
-    //     };
-    //   })
-    //   console.log("terminate resume2",resume)
-    //   console.log("terminate attempts",attempts)
-    //   console.log("terminate score",score) 
-    //   console.log("terminate data",date)  
-
-    // axios
-    // .post("/resume", resume)
-    // .then((res) => console.log(res))
-    // .catch((err) => console.log(err));  
-    // //   navigate("posts");
   };
 
   const saveUpdatedPost = () => {
@@ -126,17 +104,12 @@ function Posts() {
     <div style={{ width: "70%", margin: "auto auto", textAlign: "center" }}>    
       <nav className="navbar navbar-expand-lg  navbar-dark bg-dark">
         <div className="container-fluid">
-          <a className="navbar-brand" href="#">The Alzhma Project 2.0</a>
+          <p className="navbar-brand">The Alzhma Project 2.0</p>
           <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>
           </button>
           <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div className="navbar-nav">
-                {/* <a className="nav-link active" aria-current="page" href="./register">Registro</a>
-                <a className="nav-link active" href="./login">Login</a>
-                <a className="nav-link active" href="./profile">Perfil</a> */}
-                {/* <a className="nav-link active" href="./create">Perguntas</a>
-                <a className="nav-link active" href="./posts">Quiz</a> */}
+            <div className="navbar-nav">    
                 <a className="nav-link active" href="./">Sair</a>         
             </div>
           </div>
@@ -175,7 +148,7 @@ function Posts() {
             Voltar
           </Button>
           <Button variant="primary" onClick={saveUpdatedPost}>
-            Salvar Mudanças
+    
           </Button>
         </Modal.Footer>
       </Modal>
@@ -183,12 +156,10 @@ function Posts() {
         <>
          <h3> Hoje é : {date}</h3>
 
-         {/* {console.log("puid",posts)} */}
-
           {posts.map((post) => {
             if(post.uid===auth?.currentUser?.uid){
               console.log("sim");
-            //}            
+                 
             return(
               <div
                 style={{
@@ -199,9 +170,7 @@ function Posts() {
                 key={post._id}
               >
                 <p> Suas tentativas : {attempts}</p>
-                <p> Sua pontuação : {score}</p>
-                {/* <p>{post.uid}</p>
-                <p>{auth?.currentUser?.uid}</p> */}
+                <p> Sua pontuação : {score}</p>    
                 <h4> Pergunta : {post.title}</h4>                       
            
                 <Form.Control
@@ -210,10 +179,7 @@ function Posts() {
                   value={answer}
                   onChange={(e)=>setAnswer([e.target.value])}
                 />                
-                {/* <p>{post.description}</p> 
-                <p>{answer}</p>                        */}
-                {/* {post.description==answer?<p>OK!!!!</p>:<p>Errou</p>}    */}
-                <Button onClick={checkAnswer}>Verificar sua Resposta</Button>                  
+                     <Button onClick={checkAnswer}>Verificar sua Resposta</Button>                  
 
                 <div
                   style={{
@@ -240,12 +206,7 @@ function Posts() {
                     Remover essa Pergunta?
                   </Button>
                 </div>
-              </div>)}
-              // else{
-              //   return(
-                  
-              //   )
-              // }        
+              </div>)}    
            })}
         </>
       

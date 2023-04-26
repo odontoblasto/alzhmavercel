@@ -15,8 +15,7 @@ export  function Auth (){
 
     const signIn = async () => {
         try {
-            await createUserWithEmailAndPassword(auth,email,password);
-            // console.log("uid",auth.currentUser);
+            await createUserWithEmailAndPassword(auth,email,password);      
             navigate("/create");}
         catch(err){
             console.error(err)
@@ -24,8 +23,7 @@ export  function Auth (){
     }
     const signInWithGoogle = async () => {
         try {
-            await signInWithPopup(auth,provider);
-            // console.log("uid",auth.currentUser.uid);
+            await signInWithPopup(auth,provider);   
           
             setEmail(auth.currentUser.email);
             navigate("/create");}
