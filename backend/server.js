@@ -2,7 +2,7 @@
 // const { auth } = require('../frontend/src/config/firebase') 
 const express = require("express");
 const cors = require("cors");
-//const mongoose = require("mongoose");
+const mongoose = require("mongoose");
 require('dotenv').config();
 
 const app = express();
@@ -11,12 +11,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cors())
 
 //const uri = process.env.ATLAS_URI;
-//const uri =" mongodb+srv://cedfv:Rosinhaalzhma@alzhma.xcomflh.mongodb.net/?retryWrites=true&w=majority"
-//mongoose.connect(uri);
-//const connection = mongoose.connection;
-//connection.once('open', () => {
-//console.log("MongoDB database connection established successfully");
-//})
+const uri =" mongodb+srv://cedfv:Rosinhaalzhma@alzhma.xcomflh.mongodb.net/?retryWrites=true&w=majority"
+mongoose.connect(uri);
+const connection = mongoose.connection;
+connection.once('open', () => {
+console.log("MongoDB database connection established successfully");
+})
 
 // const uid = auth.currentUser.uid
 const postSchema = mongoose.Schema({
@@ -83,6 +83,6 @@ app.put("/update/:id", (req, res) => {
     .catch((err) => console.log(err));
 });
 
-app.listen(3001, function () {
+app.listen(80, function () {
   console.log("Express server is running");
 });
